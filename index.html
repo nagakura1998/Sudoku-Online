@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+	<head>
+		<meta charset="utf-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+		<link rel="stylesheet" media="all" type="text/css" href="../sudokuJS.css">
+		<link href="./style.css" rel="stylesheet" />
+
+		<title>SudokuJS - board size 16</title>
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+		<script type="text/javascript" src="./SudokuUtils.js"></script>
+		<script type="text/javascript" src="./script.js"></script>
+	</head>
+
+	<body>
+        <div id="header">
+            <div class="combobox">
+                <h4>Difficulty: </h4>
+                <select id="difficulty-sel">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                    <option value="very hard">Very Hard</option>
+                </select>
+            </div>
+            <div class="combobox">
+                <h4>Board Size: </h4>
+                <select id="size-sel">
+                    <option value="4">4</option>
+                    <option value="9" selected="selected">9</option>
+                </select>
+            </div>            
+        </div>
+	<div class="wrap">
+        <label for="toggleCandidates">Show Hints</label><input id="toggleCandidates" class="js-candidate-toggle" type="checkbox" unchecked/>
+        <!--solve buttons-->
+        <div class="solution">
+            Solve: <button type="button" class="js-solve-step-btn">One Step</button>
+            <button type="button" class="js-solve-all-btn">All</button>
+        </div>
+		<!--the only required html-->
+		<div id="sudoku" class="sudoku-board">
+		</div>
+	</div>
+
+	<script>
+        var	$candidateToggle = $(".js-candidate-toggle"),
+			$generateBoardBtnEasy = $(".js-generate-board-btn--easy"),
+			$generateBoardBtnMedium = $(".js-generate-board-btn--medium"),
+			$generateBoardBtnHard = $(".js-generate-board-btn--hard"),
+			$generateBoardBtnVeryHard = $(".js-generate-board-btn--very-hard"),
+
+			$solveStepBtn = $(".js-solve-step-btn"),
+			$solveAllBtn = $(".js-solve-all-btn"),
+			$clearBoardBtn = $(".js-clear-board-btn"),
+
+            $difficulty_sel = $("#difficulty-sel"),
+            $size = $("#size-sel"),
+
+			mySudokuJS = $("#sudoku").sudokuJS({
+				boardSize: 9,
+                difficulty: "easy"
+				//change state of our candidate showing checkbox on change in sudokuJS
+				,candidateShowToggleFn : function(showing){
+					$candidateToggle.prop("checked", showing);
+				}
+			});
+
+		$solveStepBtn.on("click", mySudokuJS.solveStep);
+		$solveAllBtn.on("click", mySudokuJS.solveAll);
+		$clearBoardBtn.on("click", mySudokuJS.clearBoard);
+
+		$generateBoardBtnEasy.on("click", function(){
+			mySudokuJS.generateBoard("easy");
+		});
+		$generateBoardBtnMedium.on("click", function(){
+			mySudokuJS.generateBoard("medium");
+		});
+		$generateBoardBtnHard.on("click", function(){
+			mySudokuJS.generateBoard("hard");
+		});
+		$generateBoardBtnVeryHard.on("click", function(){
+			mySudokuJS.generateBoard("very hard");
+		});
+
+		$candidateToggle.on("change", function(){
+			if($candidateToggle.is(":checked"))
+				mySudokuJS.showCandidates();
+			else
+				mySudokuJS.hideCandidates();
+		});
+		$candidateToggle.trigger("change");
+
+        const board_size_cbb = [4 ,9];
+
+        $difficulty_sel.on('change', function(){
+            document.querySelector("#sudoku").innerHTML = '';
+            //let board_size_elem = document.querySelector
+            mySudokuJS = $("#sudoku").sudokuJS({
+                boardSize: board_size_cbb[$size.selectedIndex],
+                difficulty: this.options[this.selectedIndex].value
+				//change state of our candidate showing checkbox on change in sudokuJS
+				,candidateShowToggleFn : function(showing){
+					$candidateToggle.prop("checked", showing);
+				}
+			});
+        });
+
+        $size.on('change', function(){
+            document.querySelector("#sudoku").innerHTML = '';
+            //let board_size_elem = document.querySelector
+            mySudokuJS = $("#sudoku").sudokuJS({
+                boardSize: board_size_cbb[this.selectedIndex],
+                difficulty: $difficulty_sel[0].options[$difficulty_sel[0].selectedIndex].value
+				//change state of our candidate showing checkbox on change in sudokuJS
+				,candidateShowToggleFn : function(showing){
+					$candidateToggle.prop("checked", showing);
+				}
+			});
+        })
+
+	</script>
+	</body>
+</html>
