@@ -97,7 +97,7 @@
             document.querySelector("#sudoku").innerHTML = '';
             //let board_size_elem = document.querySelector
             mySudokuJS = $("#sudoku").sudokuJS({
-                boardSize: board_size_cbb[$size.selectedIndex],
+                boardSize: board_size_cbb[$size[0].selectedIndex],
                 difficulty: this.options[this.selectedIndex].value
 				//change state of our candidate showing checkbox on change in sudokuJS
 				,candidateShowToggleFn : function(showing){
